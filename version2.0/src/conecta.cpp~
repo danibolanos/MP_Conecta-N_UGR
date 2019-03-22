@@ -1,0 +1,132 @@
+#include <string.h>
+#include <fstream>
+
+#include "matriz.h"
+#include "tablero.h"
+#include "jugador.h"
+
+using namespace std;
+
+
+void Cargar(ifstream &f, Tablero &t, Jugador &j1, Jugador &j2, int &empate){
+   char titulo[256];
+   f.getline(titulo,256);
+   if(strcmp(titulo, "MP-CONECTAN-1.0"))
+   f >> t >> j1 >> j2 >> empate;
+}
+
+void Salvar(Tablero& t, Jugador& j1, Jugador& j2, int &empates){
+   char guardar='n';
+   cerr << "Error en la selección de la columna.¿Quiere guardar la partida? ";
+   cin >> guardar;
+   
+   if (guardar == 's' || guardar == 'S'){
+      char archivo[256];
+      cout << "\nIntroduzca nombre de archivo: ";
+      cin.ignore(1000,'\n');
+      cin.getline(archivo, 256);
+      ofstream f(archivo);
+      if (f){
+         f << "#MP-CONECTAN-1.0" << "\n" << t << ' ' << j1 << ' ' << j2 << "\n" << empates;
+         f.close();
+      }
+   }
+}
+
+int main(int argc, char* argv[]){
+     
+   char seguir = 'S';
+   int empates = 0;
+   Tablero tablero;
+   Jugador jug1, jug2;
+
+   if (argc == 2){
+      ifstream f(argv[1]);
+      Cargar(f,tablero,jug1,jug2,empates);
+   }
+   
+   else{
+   char nom1[256], nom2[256];
+   int filas=0, columnas=0, fichas=0, empates=0, fich_turno=0; 
+   
+   while(filas<4 || filas>20){
+      cout << "Introduzca filas(4-20): ";
+      cin >> filas;
+   }
+   while(columnas<4 || columnas>20){
+      cout << "Introduzca columnas(4-20): ";
+      cin >> columnas;
+   }
+   while(fichas<3 || fichas>20){
+      cout << "Introduzca fichas a alinear(3-20): ";
+      cin >> fichas;
+   }
+   while(fich_turno<1 || fich_turno>fichas-2){
+      cout << "Introduzca fichas por turno(1-"<< fichas-2 << "): ";
+      cin >> fich_turno;
+      cin.ignore(1000,'\n');
+   }
+
+  
+   Tablero tableron(filas, columnas, fichas, fich_turno);
+   
+   cout << "Introduzca el nombre del primer jugador: ";
+   cin.getline(nom1, 256);
+      
+   
+   cout << "Introduzca el nombre del segundo jugador: ";
+   cin.getline(nom2, 256);
+
+   Jugador jug1a(nom1, 1);
+   Jugador jug2a(nom2, 2);
+
+   tablero = tableron;
+   jug1 = jug1a;
+   jug2 = jug2a;
+   }
+   cout << "\n";
+   
+   while(seguir == 'S' || seguir == 's'){
+   while( !tablero.finalizado() && !tablero.empate()){
+      if (tablero.getTurno() == 1){
+         if(!jug1.escogeColumna(tablero))
+            Salvar(tablero, jug1, jug2, empates);
+      }
+      else
+         if(!jug2.escogeColumna(tablero))
+            Salvar(tablero, jug1, jug2, empates);
+   }
+   
+   cout << "\n";
+   tablero.prettyPrint();
+   cout << "\n";
+   
+   cout << "Partida finalizada. Ganador: ";
+   if (tablero.ganador() == 1){
+      cout << "jugador 1";
+      jug1.nuevaVictoria(tablero);
+   }
+   else{
+      if (tablero.ganador() == 2){
+         cout << "jugador 2";
+         jug2.nuevaVictoria(tablero);
+      }
+      else{
+         cout << "Empate";
+         empates++;
+      }
+    }
+    cout << "\nResultados tras esta partida: \n";
+    jug1.mostrarPuntuacion();
+    jug2.mostrarPuntuacion();
+    
+    tablero.vaciar();
+    
+    cout << "¿Jugar de nuevo(S/N)?: ";
+    cin >> seguir;
+    }
+    cout << "\nResultados finales: \n";
+    jug1.mostrarPuntuacion();
+    jug2.mostrarPuntuacion();
+    cout << empates << " empatadas\n";
+}

@@ -1,0 +1,62 @@
+#include "matriz.h"
+
+using namespace std;
+      
+      Matriz::Matriz (int fils, int cols){
+      filas = fils;
+      columnas = cols;
+      datos = new int[fils*cols];
+      for (int i=0; i < fils*cols; ++i)
+         datos[i]=0;
+      }
+      Matriz& Matriz::operator=(const Matriz& m){
+         if (this!=&m){
+            delete[]datos;
+            filas=m.filas;
+            columnas=m.columnas;
+            datos=new int[filas*columnas];
+            for(int i=0; i<filas*columnas; ++i)
+               datos[i]=m.datos[i];
+            }
+         return *this;
+      }
+      int Matriz::getFilas()const{
+          return filas;
+      }
+      int Matriz::getColumnas()const{
+          return columnas;
+      }
+      void Matriz::setFilas(int fils){
+          filas = fils;
+      }
+      void Matriz::setColumnas(int cols){
+          columnas = cols;
+      }
+      int Matriz::getElementio(int fils, int cols)const{
+          return datos[fils*columnas+cols];
+      }
+      void Matriz::setElementio(int elementio, int fils, int cols){
+          datos[fils*columnas+cols] = elementio;
+      }
+
+      ostream& operator<<(ostream &flujo, const Matriz &m){
+         flujo << m.filas << ' ' << m.columnas << ' ';
+         for (int i=0; i < m.filas*m.columnas; ++i)
+               flujo << m.datos[i] << ' ';
+         return flujo;
+      }
+      
+      istream& operator>>(istream &flujo, Matriz &m){
+         int fils, cols;
+         int dato;
+         flujo >> fils >> cols;
+         m.filas = fils;
+         m.columnas = cols;
+         Matriz m2(fils,cols);
+         m = m2;
+         for (int i=0; i < m.filas*m.columnas; ++i){
+               flujo >> dato;
+               m.datos[i]=dato;
+	     }
+         return flujo;
+      }
