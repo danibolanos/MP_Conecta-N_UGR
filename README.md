@@ -3,6 +3,6 @@ Práctica Final de la asignatura de Metodología de la Programación de 1ºDGIIM
 
 Realizado por:
 
-Daniel Bolaños Martínez
+- Daniel Bolaños Martínez
 
-José María Borrás Serrano
+- José María Borrás Serrano
