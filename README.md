@@ -1,5 +1,5 @@
-# Practica_Final_MP_ConectaN
-Práctica Final de la asignatura de Metodología de la Programación de 1ºDGIIM.
+# Prácticas Metodología de la Programación (MP)
+Repositorio para la Práctica Final de la asignatura de Metodología de la Programación de 1ºDGIIM.
 
 Realizado por:
 
